@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.songlibrary.backend.model.Song;
 import com.songlibrary.backend.repos.SongRepository;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/songs")
 public class SongController {
@@ -25,8 +27,8 @@ public class SongController {
     private SongRepository songRepository;
 
     /**
-     * Simulate a random failure
-     * 
+     * Simulate a random failure 20% of the time.
+     *
      * @return true if the operation should fail, false otherwise
      */
     private boolean shouldFail() {
@@ -39,7 +41,7 @@ public class SongController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createSong(@RequestBody Song song) {
+    public ResponseEntity<?> createSong(@RequestBody @Valid Song song) {
         if (shouldFail()) {
             return ResponseEntity.status(500).body("Failed to add song. Please try again.");
         }
@@ -48,7 +50,7 @@ public class SongController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateSong(@PathVariable Long id, @RequestBody Song updatedSong) {
+    public ResponseEntity<?> updateSong(@PathVariable Long id, @RequestBody @Valid Song updatedSong) {
         if (shouldFail()) {
             return ResponseEntity.status(500).body("Failed to update song. Please try again.");
         }
