@@ -5,6 +5,7 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,11 @@ public class SongController {
     @Autowired
     private SongRepository songRepository;
 
+    /**
+     * Simulate a random failure
+     * 
+     * @return true if the operation should fail, false otherwise
+     */
     private boolean shouldFail() {
         return new Random().nextInt(5) == 0;
     }
@@ -33,7 +39,7 @@ public class SongController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createSong(Song song) {
+    public ResponseEntity<?> createSong(@RequestBody Song song) {
         if (shouldFail()) {
             return ResponseEntity.status(500).body("Failed to add song. Please try again.");
         }
@@ -58,4 +64,16 @@ public class SongController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteSong(@PathVariable Long id) {
+        if (shouldFail()) {
+            return ResponseEntity.status(500).body("Failed to delete song. Please try again.");
+        }
+        return songRepository.findById(id)
+                .map(song -> {
+                    songRepository.delete(song);
+                    return ResponseEntity.ok().build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

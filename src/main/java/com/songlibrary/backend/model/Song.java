@@ -9,6 +9,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 public class Song {
@@ -24,12 +26,13 @@ public class Song {
     private String artist;
 
     @Temporal(TemporalType.DATE)
+    @PastOrPresent
     private Date releaseDate;
 
     @Nonnull
+    @Positive
     private double price;
 
-    // Default constructor
     public Song() {
     }
 
