@@ -26,7 +26,6 @@ public class Song {
     private String artist;
 
     @Temporal(TemporalType.DATE)
-    @PastOrPresent
     private Date releaseDate;
 
     @Nonnull
